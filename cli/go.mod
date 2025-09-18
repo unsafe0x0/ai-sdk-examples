@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
 	github.com/joho/godotenv v1.5.1
-	github.com/unsafe0x0/ai v1.3.0
+	github.com/unsafe0x0/ai v1.3.1
 )
 
 require (

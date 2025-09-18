@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -44,7 +43,7 @@ func main() {
 			fmt.Println("GROQ_API_KEY not set")
 			return
 		}
-		client = ai.NewSDK(ai.NewGroqCloudProvider(groqCloudApiKey, "llama3-8b-8192"))
+		client = ai.NewSDK(ai.NewGroqCloudProvider(groqCloudApiKey, "openai/gpt-oss-20b"))
 	case "Mistral":
 		if mistralApiKey == "" {
 			fmt.Println("MISTRAL_API_KEY not set")
@@ -89,21 +88,27 @@ func main() {
 	ctx := context.Background()
 	reader := bufio.NewReader(os.Stdin)
 
-	var maxTokensStr string
+	var maxTokens int
 	var reasoningEffortStr string
-	survey.AskOne(&survey.Input{Message: "Max tokens (optional, press enter to skip):"}, &maxTokensStr)
-	survey.AskOne(&survey.Input{Message: "Reasoning effort (optional, press enter to skip, e.g. 1=low, 2=medium, 3=high):"}, &reasoningEffortStr)
+	var temperature float32
+	var stream bool
+	survey.AskOne(&survey.Input{Message: "Max tokens (optional, press enter to skip):"}, &maxTokens)
+	survey.AskOne(&survey.Input{Message: "Reasoning effort (optional, press enter to skip, e.g. low, medium, high):"}, &reasoningEffortStr)
+	survey.AskOne(&survey.Input{Message: "Temperature (optional, press enter to skip, e.g. 0.0 - 1.0):"}, &temperature)
+	survey.AskOne(&survey.Confirm{Message: "Stream response?"}, &stream)
 
 	var opts ai.Options
-	if maxTokensStr != "" {
-		if v, err := strconv.Atoi(maxTokensStr); err == nil {
-			opts.MaxTokens = &v
-		}
+	if maxTokens != 0 {
+		opts.MaxTokens = maxTokens
 	}
 	if reasoningEffortStr != "" {
-		if v, err := strconv.Atoi(reasoningEffortStr); err == nil {
-			opts.ReasoningEffort = &v
-		}
+		opts.ReasoningEffort = reasoningEffortStr
+	}
+	if temperature != 0 {
+		opts.Temperature = temperature
+	}
+	if stream {
+		opts.Stream = stream
 	}
 
 	for {
