@@ -37,44 +37,43 @@ func main() {
 			fmt.Println("OPEN_ROUTER_API_KEY not set")
 			return
 		}
-		client = ai.NewSDK(ai.NewOpenRouterProvider(openRouterApiKey, "openrouter/sonoma-dusk-alpha"))
+		client = ai.OpenRouter(openRouterApiKey, "openrouter/sonoma-dusk-alpha")
 	case "GroqCloud":
 		if groqCloudApiKey == "" {
 			fmt.Println("GROQ_API_KEY not set")
 			return
 		}
-		client = ai.NewSDK(ai.NewGroqCloudProvider(groqCloudApiKey, "openai/gpt-oss-20b"))
+		client = ai.GroqCloud(groqCloudApiKey, "openai/gpt-oss-20b")
 	case "Mistral":
 		if mistralApiKey == "" {
 			fmt.Println("MISTRAL_API_KEY not set")
 			return
 		}
-		client = ai.NewSDK(ai.NewMistralProvider(mistralApiKey, "mistral-small-latest"))
+		client = ai.Mistral(mistralApiKey, "mistral-small-latest")
 	case "OpenAI":
 		if openAiApiKey == "" {
 			fmt.Println("OPENAI_API_KEY not set")
 			return
 		}
-		client = ai.NewSDK(ai.NewOpenAiProvider(openAiApiKey, "gpt-3.5-turbo"))
+		client = ai.OpenAi(openAiApiKey, "gpt-3.5-turbo")
 	case "Perplexity":
 		if perplexityApiKey == "" {
 			fmt.Println("PERPLEXITY_API_KEY not set")
 			return
 		}
-
-		client = ai.NewSDK(ai.NewPerplexityProvider(perplexityApiKey, "sonar-pro"))
+		client = ai.Perplexity(perplexityApiKey, "sonar-pro")
 	case "Anthropic":
 		if anthropicApiKey == "" {
 			fmt.Println("ANTHROPIC_API_KEY not set")
 			return
 		}
-		client = ai.NewSDK(ai.NewAnthropicProvider(anthropicApiKey, "claude-3.5"))
+		client = ai.Anthropic(anthropicApiKey, "claude-3.5")
 	case "Gemini":
 		if geminiApiKey == "" {
 			fmt.Println("GEMINI_API_KEY not set")
 			return
 		}
-		client = ai.NewSDK(ai.NewGeminiProvider(geminiApiKey, "gemini-2.5-flash"))
+		client = ai.Gemini(geminiApiKey, "gemini-2.5-flash")
 	default:
 		fmt.Println("No provider selected")
 		os.Exit(1)
@@ -88,18 +87,18 @@ func main() {
 	ctx := context.Background()
 	reader := bufio.NewReader(os.Stdin)
 
-	var maxTokens int
+	var MaxCompletionTokens int
 	var reasoningEffortStr string
 	var temperature float32
 	var stream bool
-	survey.AskOne(&survey.Input{Message: "Max tokens (optional, press enter to skip):"}, &maxTokens)
+	survey.AskOne(&survey.Input{Message: "Max tokens (optional, press enter to skip):"}, &MaxCompletionTokens)
 	survey.AskOne(&survey.Input{Message: "Reasoning effort (optional, press enter to skip, e.g. low, medium, high):"}, &reasoningEffortStr)
 	survey.AskOne(&survey.Input{Message: "Temperature (optional, press enter to skip, e.g. 0.0 - 1.0):"}, &temperature)
 	survey.AskOne(&survey.Confirm{Message: "Stream response?"}, &stream)
 
 	var opts ai.Options
-	if maxTokens != 0 {
-		opts.MaxTokens = maxTokens
+	if MaxCompletionTokens != 0 {
+		opts.MaxCompletionTokens = MaxCompletionTokens
 	}
 	if reasoningEffortStr != "" {
 		opts.ReasoningEffort = reasoningEffortStr
@@ -121,20 +120,25 @@ func main() {
 
 		messages := []ai.Message{
 			systemMessage,
-			{
-				Role:    "user",
-				Content: input,
-			},
+			{Role: "user", Content: input},
 		}
 
 		fmt.Print("\nResponse: ")
-		err := client.StreamCompleteWithOptions(ctx, messages, func(chunk string) error {
-			fmt.Print(chunk)
-			return nil
-		}, &opts)
-
-		if err != nil {
-			fmt.Println("\nError", err)
+		if stream {
+			_, err := client.Generate(ctx, messages, &opts, func(chunk string) error {
+				fmt.Print(chunk)
+				return nil
+			})
+			if err != nil {
+				fmt.Println("\nError", err)
+			}
+		} else {
+			resp, err := client.Generate(ctx, messages, &opts, nil)
+			if err != nil {
+				fmt.Println("\nError", err)
+			} else {
+				fmt.Println(resp)
+			}
 		}
 	}
 }
