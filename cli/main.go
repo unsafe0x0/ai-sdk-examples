@@ -22,11 +22,12 @@ func main() {
 	perplexityApiKey := os.Getenv("PERPLEXITY_API_KEY")
 	anthropicApiKey := os.Getenv("ANTHROPIC_API_KEY")
 	geminiApiKey := os.Getenv("GEMINI_API_KEY")
+	xAiApiKey := os.Getenv("XAI_API_KEY")
 
 	provider := ""
 	prompt := &survey.Select{
 		Message: "Choose a provider:",
-		Options: []string{"OpenRouter", "GroqCloud", "Mistral", "OpenAI", "Perplexity", "Anthropic", "Gemini"},
+		Options: []string{"OpenRouter", "GroqCloud", "Mistral", "OpenAI", "Perplexity", "Anthropic", "Gemini", "XAI"},
 	}
 	survey.AskOne(prompt, &provider)
 
@@ -74,6 +75,12 @@ func main() {
 			return
 		}
 		client = ai.Gemini(geminiApiKey, "gemini-2.5-flash")
+	case "XAI":
+		if xAiApiKey == "" {
+			fmt.Println("XAI_API_KEY not set")
+			return
+		}
+		client = ai.Xai(xAiApiKey, "grok-4-latest")
 	default:
 		fmt.Println("No provider selected")
 		os.Exit(1)
