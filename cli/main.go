@@ -23,11 +23,12 @@ func main() {
 	anthropicApiKey := os.Getenv("ANTHROPIC_API_KEY")
 	geminiApiKey := os.Getenv("GEMINI_API_KEY")
 	xAiApiKey := os.Getenv("XAI_API_KEY")
+	anannasApiKey := os.Getenv("ANANNAS_API_KEY")
 
 	provider := ""
 	prompt := &survey.Select{
 		Message: "Choose a provider:",
-		Options: []string{"OpenRouter", "GroqCloud", "Mistral", "OpenAI", "Perplexity", "Anthropic", "Gemini", "XAI"},
+		Options: []string{"OpenRouter", "GroqCloud", "Mistral", "OpenAI", "Perplexity", "Anthropic", "Gemini", "XAI", "Anannas"},
 	}
 	survey.AskOne(prompt, &provider)
 
@@ -81,6 +82,12 @@ func main() {
 			return
 		}
 		client = ai.Xai(xAiApiKey, "grok-4-latest")
+	case "Anannas":
+		if anannasApiKey == "" {
+			fmt.Println("ANANNAS_API_KEY not set")
+			return
+		}
+		client = ai.Anannas(anannasApiKey, "mistralai/mistral-small-3.2-24b-instruct:free")
 	default:
 		fmt.Println("No provider selected")
 		os.Exit(1)

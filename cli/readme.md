@@ -14,6 +14,7 @@ This is a command line interface (CLI) application that demonstrates how to use 
     -   Perplexity (`sonar-pro`)
     -   Anthropic (`claude-3.5`)
     -   Gemini (`gemini-2.5-flash`)
+    -   Annanas (`mistralai/mistral-small-3.2-24b-instruct:free`)
 -   Streaming or non-streaming responses.
 -   Optional configuration for max tokens, reasoning effort, temperature, and streaming.
 

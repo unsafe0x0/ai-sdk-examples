@@ -6,7 +6,6 @@ This repository contains examples demonstrating how to use the `github.com/unsaf
 
 All examples in this repository are built using the [`github.com/unsafe0x0/ai`](https://github.com/unsafe0x0/ai) Go SDK. This SDK provides a unified interface for interacting with a variety of AI models and providers.
 
-
 ## Prerequisites
 
 - Go 1.18 or later
@@ -15,18 +14,19 @@ All examples in this repository are built using the [`github.com/unsafe0x0/ai`](
 ## Installation
 
 1. Clone this repository and navigate to the example you want to run:
-	```bash
-	git clone <repo-url>
-	cd examples/<example-dir>
-	```
+   ```bash
+   git clone <repo-url>
+   cd examples/<example-dir>
+   ```
 2. Install dependencies:
-	```bash
-	go mod tidy
-	```
+   ```bash
+   go mod tidy
+   ```
 
 ## Configuration
 
 Create a `.env` file in the example directory and add your API keys accordingly. Example:
+
 ```env
 OPEN_ROUTER_API_KEY="your-open-router-api-key"
 GROQ_API_KEY="your-groq-cloud-api-key"
@@ -35,8 +35,11 @@ OPENAI_API_KEY="your-openai-api-key"
 PERPLEXITY_API_KEY="your-perplexity-api-key"
 ANTHROPIC_API_KEY="your-anthropic-api-key"
 GEMINI_API_KEY="your-gemini-api-key"
+ANANNAS_API_KEY="your-annanas-api-key"
 ```
+
 You can obtain API keys from:
+
 - [OpenRouter](https://openrouter.ai/keys)
 - [GroqCloud](https://console.groq.com/keys)
 - [Mistral](https://console.mistral.ai/api-keys/)
@@ -44,6 +47,7 @@ You can obtain API keys from:
 - [Perplexity](https://www.perplexity.ai/settings/api)
 - [Anthropic](https://console.anthropic.com/settings/keys)
 - [Gemini](https://aistudio.google.com/app/apikey)
+- [Annanas](https://anannas.ai/)
 
 ## Examples
 
@@ -53,7 +57,6 @@ Each directory contains a self-contained example:
 - [`rest-api/`](./rest-api): REST API for English-to-French translation using an AI model.
 
 See the `readme.md` file within each example's directory for usage and features specific to that example.
-
 
 ## Documentation
 
