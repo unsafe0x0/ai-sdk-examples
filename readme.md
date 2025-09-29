@@ -55,6 +55,7 @@ Each directory contains a self-contained example:
 
 - [`cli/`](./cli): Command-line interface (CLI) chat with different AI models.
 - [`rest-api/`](./rest-api): REST API for English-to-French translation using an AI model.
+- [`text-to-speech/`](./text-to-speech): Generate text with an AI model and convert it to speech using ElevenLabs.
 
 See the `readme.md` file within each example's directory for usage and features specific to that example.
 
